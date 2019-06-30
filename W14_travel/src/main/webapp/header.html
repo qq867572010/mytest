@@ -1,0 +1,102 @@
+<!-- 头部 start -->
+<header id="header">
+    <div class="top_banner">
+        <img src="images/top_banner.jpg" alt="">
+    </div>
+    <div class="shortcut">
+        <!-- 未登录状态  -->
+        <div class="login_out">
+            <a href="login.html">登录</a>
+            <a href="register.html">注册</a>
+        </div>
+        <!-- 登录状态  -->
+        <div class="login" style="display: none">
+            <span>欢迎回来，admin</span>
+            <a href="myfavorite.html?pageNumber=1" class="collection">我的收藏</a>
+            <a href="user?action=logout">退出</a>
+        </div>
+
+        <script>
+            $(function () {
+                $.post("user", "action=getLoginUser", function (result) {
+                    if (result.ok) {
+                        //处于登录状态
+                        $(".login>span").html("欢迎回来，" + result.data);
+                        $(".login").show();
+                        $(".login_out").hide();
+                    }
+                }, "json")
+            })
+        </script>
+
+    </div>
+    <div class="header_wrap">
+        <div class="topbar">
+            <div class="logo">
+                <a href="/"><img src="images/logo.jpg" alt=""></a>
+            </div>
+            <div class="search">
+                <input name="" type="text" placeholder="请输入路线名称" class="search_input" autocomplete="off">
+                <a href="javascript:;" class="search-button">搜索</a>
+            </div>
+
+            <script>
+                $(".search-button").click(function () {
+                    location.href = "route_list.html?pageNumber=1&rname=" + $(".search_input").val();
+                });
+            </script>
+
+            <div class="hottel">
+                <div class="hot_pic">
+                    <img src="images/hot_tel.jpg" alt="">
+                </div>
+                <div class="hot_tel">
+                    <p class="hot_time">客服热线(9:00-6:00)</p>
+                    <p class="hot_num">400-618-9090</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- 头部 end -->
+<!-- 首页导航 -->
+<div class="navitem">
+    <ul class="nav">
+        <li class="nav-active"><a href="index.html">首页</a></li>
+        <li><a href="route_list.html">门票</a></li>
+        <li><a href="route_list.html">酒店</a></li>
+        <li><a href="route_list.html">香港车票</a></li>
+        <li><a href="route_list.html">出境游</a></li>
+        <li><a href="route_list.html">国内游</a></li>
+        <li><a href="route_list.html">港澳游</a></li>
+        <li><a href="route_list.html">抱团定制</a></li>
+        <li><a href="route_list.html">全球自由行</a></li>
+        <li><a href="favoriterank.html?pageNumber=1">收藏排行榜</a></li>
+    </ul>
+</div>
+
+<script>
+
+    //导航条
+    $(function () {
+        $.post("category", "action=queryAll", function (result) {
+            if (result.ok) {
+                //获取返回的数值
+                var categories = result.data;
+                //把字符串转化成json对象
+                var categoryList = eval("(" + categories + ")");
+                //循环遍历
+                var catHtml = "<li class=\"nav-active\"><a href=\"index.html\">首页</a></li>";
+                for (var cat of categoryList) {
+                    catHtml += " <li><a href=\"route_list.html?pageNumber=1&cid=" + cat.cid + "\">" + cat.cname + "</a></li>";
+                }
+                catHtml += "<li><a href=\"favoriterank.html?pageNumber=1\">收藏排行榜</a></li>";
+                $(".nav").html(catHtml);
+            } else {
+                alert(result.msg);
+            }
+        }, "json");
+    })
+
+</script>
+    
